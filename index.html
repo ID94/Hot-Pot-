@@ -130,6 +130,11 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 .leaderboard{align-content:start}
 #storyLabel:empty{display:none}
 .rkTabs{justify-content:flex-start!important;gap:6px!important}.rkTab{font-family:Silkscreen,ui-monospace,monospace;font-size:11px;padding:6px 9px;background:#26232c;color:#a8a3ad;border:2px solid #3a3742;border-radius:2px;cursor:pointer}.rkTab.on{color:#ffe8d2;border-color:#e3a35d;background:#453043}.rankWorld .rankName small{color:#9de0da}
+.modeOff{opacity:.42;filter:grayscale(1);cursor:not-allowed!important;pointer-events:none}.modeOff .dishPrice{font-size:9px!important;letter-spacing:1px}
+.modeOn .dishPrice{color:#9de0da!important}
+/* menu: tętniąca życiem knajpa w tle */
+#menu.menuCover{background:radial-gradient(ellipse at 50% 50%,#100f1b40 0%,#100f1b8a 72%,#0a0910d0 100%)!important;backdrop-filter:blur(1px)!important}
+.menuShell{background:rgba(31,29,36,.84)!important;backdrop-filter:blur(3px)}
 /* v3.9: ekran końca mieści się w oknie, duże wyniki nie rozpychają */
 #finish{overflow:hidden!important;padding:14px!important}
 #finish .panel{max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px);overflow-y:auto;overflow-x:hidden;padding:20px 26px!important;scrollbar-width:thin;scrollbar-color:#4a4652 #1f1d24}
@@ -255,13 +260,13 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
       <h1 class="srOnly">HOT POT</h1><div class="coverArt"><canvas id="coverCanvas" width="1040" height="520" aria-label="Okładka: talerz leci w stronę szefa kuchni"></canvas></div>
       <label class="nameLabel" for="playerName">TWOJE IMIĘ / NICK</label>
       <input id="playerName" class="nameInput" maxlength="16" type="text" value="Gracz" placeholder="Wpisz nick" autocomplete="nickname" spellcheck="false" />
-      <p class="nameLabel" id="dishLabel">WYBIERZ DANIE Z KARTY</p>
-      <div class="dishGrid" role="radiogroup" aria-labelledby="dishLabel">
-        <label class="dish"><input type="radio" name="dish" value="ramen" checked/><span class="dishArt">🍜</span><span class="dishText"><b>NEON RAMEN</b></span><span class="dishPrice">29 zł</span></label>
-        <label class="dish"><input type="radio" name="dish" value="hotpot"/><span class="dishArt">🥘</span><span class="dishText"><b>HOT POT DELUXE</b></span><span class="dishPrice">39 zł</span></label>
-        <label class="dish"><input type="radio" name="dish" value="dumplings"/><span class="dishArt">🥟</span><span class="dishText"><b>PIEROŻKI SZOK</b></span><span class="dishPrice">24 zł</span></label>
+      <p class="nameLabel" id="modeLabel">TRYB GRY</p>
+      <div class="dishGrid modeGrid" role="radiogroup" aria-labelledby="modeLabel">
+        <label class="dish modeOn"><input type="radio" name="mode" value="1p" checked/><span class="dishArt">👤</span><span class="dishText"><b>1 GRACZ</b></span><span class="dishPrice">GRAJ</span></label>
+        <label class="dish modeOff" aria-disabled="true"><input type="radio" name="mode" value="2p" disabled/><span class="dishArt">👥</span><span class="dishText"><b>2 GRACZY</b></span><span class="dishPrice">WKRÓTCE</span></label>
+        <label class="dish modeOff" aria-disabled="true"><input type="radio" name="mode" value="online" disabled/><span class="dishArt">🌐</span><span class="dishText"><b>ONLINE</b></span><span class="dishPrice">WKRÓTCE</span></label>
       </div>
-      <button class="startNeon" id="play">▶ ODBIERZ ZAMÓWIENIE <span>→</span></button>
+      <button class="startNeon" id="play">▶ WCHODZĘ DO KNAJPY <span>→</span></button>
       <p class="shortControls">WASD ruch · SHIFT bieg · J pięści · K kopnięcia · L blok · I chwyć/rzuć</p><p class="shortControls" style="opacity:.6;font-size:9px!important">Muzyka: FreePD, John Bartmann, davejf · Dźwięki: Kenney, rubberduck, Juhani Junkala, Ogrebane, dokuta_gerovv (CC0)</p>
     </section>
     <aside class="menuSide">
@@ -380,9 +385,9 @@ function renderScores(){const list=$('leaderboard');list.replaceChildren();list.
  if(!highScores.length){const row=document.createElement('li');row.className='emptyRecord';row.textContent='Brak wyników.';list.append(row);}else highScores.forEach((r,i)=>{const row=document.createElement('li'),num=document.createElement('span'),nm=document.createElement('span'),sm=document.createElement('small'),pts=document.createElement('span');num.className='rankNo';num.textContent=String(i+1).padStart(2,'0');nm.className='rankName';nm.textContent=r.name;sm.textContent=DISHES[r.dish]?.name||'HOT POT';pts.className='rankPts';pts.textContent=Math.round(r.score).toLocaleString('pl-PL')+' PKT';nm.append(sm);row.append(num,nm,pts);list.append(row);});$('saveStatus').textContent=storageOK?'':'Zapis niedostępny.';}
 function saveScore(){const entry={name:chosenName,dish:chosenDish,score:Math.round(score),broken,combo:bestCombo,chaos:Math.round(maxChaos),created:Date.now()};highScores.push(entry);highScores.sort((a,b)=>b.score-a.score||a.created-b.created);highScores=highScores.slice(0,10);const rank=highScores.indexOf(entry);safeWrite(STORAGE_KEY,highScores);renderScores();const personal=highScores.filter(r=>r.name===chosenName);const best=Math.max(...personal.map(r=>r.score),0);const loc=rank===0?'🏆 NOWY REKORD! • 1. MIEJSCE':rank>=0?`🏆 TOP ${rank+1} • rekord ${chosenName}: ${best.toLocaleString('pl-PL')} pkt`:`Rekord ${chosenName}: ${best.toLocaleString('pl-PL')} pkt`;$('recordResult').textContent=loc+' • 🌍 wysyłam do rankingu…';
  const ge={name:chosenName,score:entry.score,level,dish:chosenDish};submitGlobal(ge).then(()=>new Promise(r=>setTimeout(r,1800))).then(fetchGlobal).then(gs=>{if(!gs){$('recordResult').textContent=loc+' • 🌍 ranking offline';return;}const pos=gs.findIndex(r=>r.name===ge.name&&r.score===ge.score);$('recordResult').textContent=loc+' • '+(pos>=0?`🌍 ŚWIAT: #${pos+1}`:(entry.score>0?'🌍 poza TOP 50':'🌍 0 pkt — nie zapisano'));});}
-function readOrder(){const field=$('playerName');chosenName=(field.value||'Gracz').replace(/[<>\u0000-\u001f]/g,'').trim().slice(0,16)||'Gracz';field.value=chosenName;chosenDish=document.querySelector('input[name="dish"]:checked')?.value||'ramen';safeWrite(PREF_KEY,{name:chosenName,dish:chosenDish});}
+function readOrder(){const field=$('playerName');chosenName=(field.value||'Gracz').replace(/[<>\u0000-\u001f]/g,'').trim().slice(0,16)||'Gracz';field.value=chosenName;chosenDish=pick(['ramen','hotpot','dumplings']);safeWrite(PREF_KEY,{name:chosenName,dish:chosenDish});}
 function loadOrder(){const pref=safeRead(PREF_KEY,{});if(pref&&typeof pref.name==='string')$('playerName').value=pref.name.slice(0,16);if(pref&&DISHES[pref.dish]){const choice=document.querySelector(`input[name="dish"][value="${pref.dish}"]`);if(choice)choice.checked=true;}}
-function goMenu(){phase='menu';keys.clear();hitStop=0;shake=0;musicTrack.pause();roomTrack.pause();$('finish').classList.add('hidden');$('menu').classList.remove('hidden');$('hud').classList.remove('show');$('bottom').classList.remove('show');$('cinema').classList.remove('show');$('countdown').classList.remove('show');$('tip').classList.remove('show');renderScores();}
+function goMenu(){phase='menu';level=1;jailOn=false;timeScale=1;$('game').classList.remove('jail');initWorld();keys.clear();hitStop=0;shake=0;musicTrack.pause();roomTrack.pause();$('finish').classList.add('hidden');$('menu').classList.remove('hidden');$('hud').classList.remove('show');$('bottom').classList.remove('show');$('cinema').classList.remove('show');$('countdown').classList.remove('show');$('tip').classList.remove('show');renderScores();}
 function initAudio(){if(!audio.on)return;try{if(!audio.ctx){audio.ctx=new (window.AudioContext||window.webkitAudioContext)();const a=audio.ctx;audio.noise=a.createBuffer(1,Math.round(a.sampleRate*1.1),a.sampleRate);const data=audio.noise.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;}audio.ctx.resume();audio.next=audio.ctx.currentTime;audio.step=0;startTracks();}catch(e){audio.on=false;}}
 function noiseSound(time,duration,vol=.04,filterFreq=900,filterType='highpass'){if(!audio.on||!audio.ctx||!audio.noise)return;const a=audio.ctx,src=a.createBufferSource(),f=a.createBiquadFilter(),gain=a.createGain();src.buffer=audio.noise;f.type=filterType;f.frequency.setValueAtTime(filterFreq,time);gain.gain.setValueAtTime(Math.max(.0001,vol),time);gain.gain.exponentialRampToValueAtTime(.0001,time+Math.max(.025,duration));src.connect(f);f.connect(gain);gain.connect(a.destination);src.start(time);src.stop(time+duration+.025);}
 function punchSound(){if(!audio.ctx||!audio.on)return;const a=audio.ctx,t=a.currentTime;noiseSound(t,.11,.067,390,'lowpass');noiseSound(t+.016,.065,.027,1550,'bandpass');noiseSound(t+.052,.06,.015,680,'bandpass');const osc=a.createOscillator(),gn=a.createGain();osc.type='triangle';osc.frequency.setValueAtTime(175,t);osc.frequency.exponentialRampToValueAtTime(58,t+.13);gn.gain.setValueAtTime(.14,t);gn.gain.exponentialRampToValueAtTime(.0001,t+.145);osc.connect(gn).connect(a.destination);osc.start(t);osc.stop(t+.16);}
@@ -2160,9 +2165,9 @@ function drawRoom(){drawFloor();drawWall();drawDioramaDetails();drawGlassWins();
 }
 function drawScene(){g.setTransform(DPR,0,0,DPR,0,0);g.clearRect(0,0,W,H);const naturalZoom=clamp(Math.min(W/1430,H/810)*1.05,.52,1.2);let want=naturalZoom;
  if(phase==='intro'&&introT<2.5)want=naturalZoom*.87;else if(phase==='intro')want=naturalZoom*1.12;
- if(phase==='countdown')want=naturalZoom*1.2;if(phase==='play')want=naturalZoom*1.12;if(phase==='menu')want=naturalZoom*.88;
+ if(phase==='countdown')want=naturalZoom*1.2;if(phase==='play')want=naturalZoom*1.12;if(phase==='menu')want=naturalZoom*1.22;
  want*=1+zoomKick;zoomKick*=Math.exp(-frameDt*6);zoom=lerp(zoom,want,ease(2.1));
- let target=phase==='intro'&&introT<3?{x:640,y:444}:phase==='intro'&&introT>7?{x:770,y:360}:phase==='countdown'?{x:770,y:410}:phase==='play'?player:{x:645,y:455};
+ let target=phase==='intro'&&introT<3?{x:640,y:444}:phase==='intro'&&introT>7?{x:770,y:360}:phase==='countdown'?{x:770,y:410}:phase==='play'?player:phase==='menu'?{x:640+Math.sin(sim*.07)*260,y:470+Math.sin(sim*.05)*90}:{x:645,y:455};
  const la=phase==='play'?{x:(player.mvx||0)*.22,y:(player.mvy||0)*.16}:{x:0,y:0},ce=ease(phase==='play'?5.7:2.1);cam.x=lerp(cam.x,target.x+la.x,ce);cam.y=lerp(cam.y,target.y+la.y,ce);
  g.save();if(shake>0)g.translate(Math.sin(sim*83)*shake,Math.cos(sim*71)*shake*.8);drawRoom();g.restore();
  // letterbox grade + soft warm vignette
@@ -2219,7 +2224,24 @@ function drawCover(t){
    if(food==='n'){RB(fx0+2,ty+1,5,2,'#c86a35');RB(fx0+3,ty+1,1,1,'#f3d38a');RB(fx0+5,ty+1,1,1,'#fff6d8');}else if(food==='d'){RB(fx0+1,ty+1,2,2,'#efe6cf');RB(fx0+4,ty+1,2,2,'#efe6cf');RB(fx0+7,ty+1,1,2,'#efe6cf');}else{RB(fx0+2,ty+1,5,2,'#f7f2e6');RB(fx0+4,ty+1,1,1,'#5aa04a');}
    RB(fx0+10,ty,1,4,'#6a3a1e');for(let k=0;k<2;k++){const u=(t*.5+k*.5+fx0*.07)%1;B.globalAlpha=(1-u)*.5;RB(fx0+3+k*3+Math.sin(t*3+k)*1,ty-2-u*9,1,2,'#fffaf0');B.globalAlpha=1;}}
   RB(tx+ws/2+10,ty,3,2,'#e9e2d2');RB(tx+ws/2+10,ty,3,1,'#8a5a2a');};
+ // ===== tłum gości =====
+ const SKN=['#edb88b','#d8a07a','#c8865a','#f0c8a0','#a86a48'],SHR=['#3a6ab0','#c43a3a','#4a8a4a','#e8c040','#7a4ab0','#2a2a30','#e8e0d0','#d86a2a','#3a8a9a'],HRS=['#2a1a14','#5a3a22','#8a5a2a','#d8b860','#1a1a1a','#a8a8a8'];
+ const SEAT=(x,ty,i,fac)=>{const sk=SKN[i%5],sh=SHR[(i*3)%9],hr=HRS[(i*7)%6],e=Math.sin(t*(2.2+i%3*.4)+i*1.7);
+  if(fac){RB(x,ty-7,7,7,sh);RB(x,ty-7,1,7,'rgba(0,0,0,.25)');RB(x+1,ty-12+(e>.85?1:0),5,5,sk);RB(x+1,ty-12+(e>.85?1:0),5,2,hr);RB(x+2,ty-10+(e>.85?1:0),1,1,'#2a1d1d');RB(x+4,ty-10+(e>.85?1:0),1,1,'#2a1d1d');
+   const up=e>.2?3:0;RB(x+6,ty-6-up,2,5,sh);RB(x+6,ty-7-up,2,2,sk);if(i%4===1&&Math.sin(t*.9+i)>.3){RB(x+7,ty-21,9,6,'#f4efe2');RB(x+8,ty-15,2,2,'#f4efe2');RB(x+9,ty-19,1,1,'#3a2a2a');RB(x+11,ty-19,1,1,'#3a2a2a');RB(x+13,ty-19,1,1,'#3a2a2a');}}
+  else{RB(x,ty+6,8,9,sh);RB(x,ty+6,8,1,'rgba(255,255,255,.15)');RB(x+1,ty+1,6,6,hr);RB(x+1,ty+6,6,1,sk);const tw=Math.sin(t*1.3+i)>.6?1:0;RB(x+1+tw,ty+1,6,6,hr);}};
+ // goście przy stołach (tył stołu)
+ [[18,104,0],[30,104,1],[56,104,2],[70,104,3],[114,106,4],[128,106,5],[158,106,6],[174,106,7]].forEach(([x,ty,i])=>SEAT(x,ty,i,true));
+ // goście przy barze/kuchni na stojąco
+ for(let i=0;i<5;i++){const x=200+i*11+Math.sin(t*.7+i)*1.5,y=96,sk=SKN[(i+2)%5],sh=SHR[(i*5+1)%9],hr=HRS[(i*3+1)%6];RB(x,y-11,8,11,sh);RB(x+1,y-17,6,6,sk);RB(x+1,y-17,6,2,hr);RB(x+2,y-14,1,1,'#2a1d1d');RB(x+5,y-14,1,1,'#2a1d1d');if(i%2){RB(x+7,y-9,2,3,sk);RB(x+7,y-13,2,4,'rgba(230,180,60,.95)');RB(x+7,y-14,2,1,'#fff6e0');}}
  TBL(14,104,72);TBL(110,106,78);
+ // goście tyłem przy bliższej krawędzi stołów
+ [[24,104,8],[44,104,9],[62,104,10],[120,106,11],[146,106,12],[170,106,13]].forEach(([x,ty,i])=>SEAT(x,ty+4,i,false));
+ // kelner z tacą kursuje między stołami
+ {const u=(t*.09)%2,pp=u<1?u:2-u,x=20+pp*200,y=128,st=Math.floor(t*7)%2,dr=u<1?1:-1;RB(x,y-6,2,6,'#1a1a20');RB(x+3,y-6+st,2,6-st,'#1a1a20');RB(x-1,y-15,8,9,'#f4f0e6');RB(x+2,y-15,2,9,'#1a1a20');RB(x,y-20,6,5,'#edb88b');RB(x,y-20,6,2,'#2a1a14');
+  RB(x+(dr>0?6:-6),y-17,7,1,'#c8ccd0');RB(x+(dr>0?7:-5),y-19,2,2,'#f2eadb');RB(x+(dr>0?10:-2),y-19,2,2,'#c86a35');}
+ // pierwszy plan: sylwetki głów tłumu
+ for(let i=0;i<9;i++){const x=6+i*31+Math.sin(i*2.7)*6,b=Math.sin(t*1.1+i*1.3)*1;B.fillStyle='#0c070a';B.beginPath();B.arc(x,128+b,7+(i%3),0,TAU);B.fill();B.fillRect(x-11,131+b,22,6);}
  const Z=1.03+.02*Math.sin(t*.35),sw=w/Z,sh=h/Z,sx=(w-sw)/2+Math.sin(t*.2)*2,sy=(h-sh)/2,K=1040/sw,c=cv;
  c.setTransform(1,0,0,1,0,0);c.imageSmoothingEnabled=false;c.drawImage(COV.bg,sx,sy,sw,sh,0,0,1040,520);
  c.save();c.setTransform(K,0,0,K,-sx*K,-sy*K);
@@ -2244,7 +2266,7 @@ function drawCover(t){
  c.strokeStyle='#22150f';c.lineWidth=12;c.strokeRect(0,0,1040,520);
 }
 function frame(ts){const rdt=Math.min(.055,(ts-last)/1000||.016);if(critSlow>0)critSlow-=rdt;const dt=rdt*(jailOn?timeScale:critSlow>0?.3:timeScale);last=ts;frameDt=dt;sndTick(dt);
- if(hitStop>0){hitStop=Math.max(0,hitStop-dt);}else if(phase!=='menu'&&phase!=='end')update(dt);else if(phase==='menu')sim+=dt*.5;
+ if(hitStop>0){hitStop=Math.max(0,hitStop-dt);}else if(phase!=='menu'&&phase!=='end')update(dt);else if(phase==='menu'){sim+=dt;updateSmoothing(dt);updatePeople(dt);updatePhysics(dt);}
  if(!player)initWorld();drawScene();if(phase==='menu')drawCover(sim);if(phase==='intro')drawComic(introT);else if(phase==='countdown')drawComic(17.6+countT);if(phase!=='menu'&&phase!=='end'&&toastAt&&sim>toastAt){$('toast').classList.remove('show');toastAt=0;}
  requestAnimationFrame(frame);
 }
