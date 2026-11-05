@@ -24,3 +24,9 @@ Pixelartowa bijatyka w restauracji, w stylu Tibii. Cała gra mieści się w jedn
 5. Green Soul Bistro
 
 Muzyka i dźwięki pochodzą z wolnych źródeł CC0 (FreePD, Kenney i inne).
+
+
+## Ustawienia i pady
+- ⚙ USTAWIENIA w menu: głośność muzyki/efektów/gwaru, trzęsienie ekranu, efekty pijaństwa, dowolna zmiana klawiszy (1 gracz, G1, G2).
+- Pady (Xbox/PlayStation): A pięść, B kopniak, X chwyć/rzuć, Y rzut przedmiotem, LB/RB blok, RT bieg, START start/pomiń. W trybie 2 graczy: 2 pady = G1 i G2, 1 pad = G2 (do zamiany w ustawieniach).
+- Muzyka ładuje się w tle z folderu `audio/`, więc gra startuje dużo szybciej.
