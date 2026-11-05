@@ -2223,7 +2223,7 @@ function critFX(x,y){captureHL(x,y,'KRYTYK!',300);critSlow=.6;critFlash=1;zoomKi
  texts.push({x:x+34,y,z:120,life:.9,text:'',skull:true,big:1,wob:rnd(-1,1)});fx('crack');sndPlay('punch',{rate:.6,vol:1,vari:.05,max:3});sndPlay('wood',{rate:.7,vol:.6,max:4});hitFX(x,y,rnd(0,TAU),true);}
 function stripCoat(){if(!player||player.outfit!=='coat')return;player.outfit='sleeves';player.flexT=.9;const a=player.dir+PI;
  for(const type of ['hat','coat'])clothes.push({type,x:player.x,y:player.y,z:type==='hat'?96:72,vx:Math.cos(a+rnd(-.9,.9))*rnd(90,170),vy:Math.sin(a+rnd(-.9,.9))*rnd(60,120),vz:rnd(170,270),rot:rnd(0,TAU),vr:rnd(-10,10)});
- fx('swing');setTimeout(()=>fx('swing'),180);floating('PŁASZCZ PRECZ!',player.x,player.y,'#ffd36a');toast('🧥 Zrzuca płaszcz i kapelusz, podwija rękawy...');}
+ fx('swing');setTimeout(()=>fx('swing'),180);texts.push({x:player.x,y:player.y,z:118,life:2.4,text:'No to zaczynamy...',quip:true});quipCD=3;toast('🧥 No to zaczynamy...');}
 function updateCloth(dt){if(player&&player.flexT>0)player.flexT-=dt;for(const c of clothes){if(c.z<=0&&c.vz===0)continue;c.x+=c.vx*dt;c.y+=c.vy*dt;c.z+=c.vz*dt;c.vz-=(c.type==='hat'?500:620)*dt;c.rot+=c.vr*dt;c.vx*=Math.exp(-dt*1.3);c.vy*=Math.exp(-dt*1.3);roomBounce(c);if(c.z<=0){c.z=0;c.vz=0;c.vx=0;c.vy=0;c.vr=0;dust(c.x,c.y,'#d9caa8',3);}}}
 function drawCloth(c){const pp=project(c.x,c.y,c.z),s=zoom;g.save();g.translate(pp.x,pp.y);g.rotate(c.rot);
  if(c.type==='hat'){g.fillStyle='#141318';g.beginPath();g.ellipse(0,0,14*s,8*s,0,0,TAU);g.fill();g.fillStyle='#24232b';g.beginPath();g.ellipse(0,-2*s,8*s,5*s,0,0,TAU);g.fill();g.fillStyle='#6a2a2a';g.fillRect(-8*s,-1*s,16*s,2*s);}
