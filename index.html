@@ -487,9 +487,9 @@ const THEMES=[
   lampCol:['#e8a85c','#ffe2a6'],tableLamps:true,dark:.5,lampGlow:'rgba(255,160,80,',lantern:'red',lanternGlow:'rgba(255,120,70,',paper:'#e9d9bc',broth:'#d0612f',potLabel:'火锅',cs:'toque',chefShirt:'#fff5e9',cookShirt:'#f1ebdd',elder:.18,
   pal:['#a8553f','#5b7f9a','#8f7aa8','#c49a5a','#6e8f5e','#b86a7a','#d9d2c2','#4f6d7a','#91bdb1','#df987a'],
   tables:[[255,442,136,91],[440,587,132,92],[240,677,132,87],[880,540,132,94],[1003,706,120,82],[651,744,132,85],[1025,440,105,80]]},
- {id:'kebab',name:'KEBAB POD MOSTEM',sub:'Mały, obskurny lokal z kebabem. Szef to turecki mistrz dönera.',sign:'KEBAB 24h',signCol:'#ffd23a',floor:['#8a8a82','#80807a','#94948c','#4a4a46'],wall:['#c9b48a','#a8946c','#7a6a4c'],slat:'#b8a47a',slat2:'#b8a47a',trim:'#d8402a',
-  frames:['DÖNER · 22 zł','FALAFEL · 19 zł','AYRAN · 6 zł'],tb:['#e8e4dc','#b8b4ac','#9a968e','#f2efe8','#c8c4bc','#d0ccc4','#ffffff'],cloth:'none',ch:['#c43a2a','#9a2a1e','#7a2018','#d84a3a','#a83224','#8a2a1e','#e05a4a'],
-  lampCol:['#e8e8e0','#ffffff'],tableLamps:false,dark:.26,lampGlow:'rgba(230,240,255,',lantern:'tube',lanternGlow:'rgba(220,235,255,',paper:'#d8e4e8',broth:'#d8a640',potLabel:'FRYTKI',cs:'doner',chefShirt:'#f2f0ea',cookShirt:'#f2f0ea',elder:.08,small:true,
+ {id:'kebab',name:'KEBAB POD MOSTEM',sub:'Mały, obskurny lokal z kebabem. Szef to turecki mistrz dönera.',sign:'KEBAB 24h',signCol:'#ffd23a',floor:['#8a8a82','#80807a','#94948c','#4a4a46'],wall:['#a89a6c','#8a7c52','#5e5238'],slat:'#8a7c56',slat2:'#86784e',trim:'#8a3a2a',
+  frames:['DÖNER · 22 zł','FALAFEL · 19 zł','AYRAN · 6 zł'],tb:['#cfc6ae','#a8a08a','#86806c','#d8d0b8','#b4ac94','#bcb49c','#e4dcc4'],cloth:'none',ch:['#c43a2a','#9a2a1e','#7a2018','#d84a3a','#a83224','#8a2a1e','#e05a4a'],
+  lampCol:['#d8e8d0','#f0fff0'],tableLamps:false,dark:.36,lampGlow:'rgba(200,240,210,',lantern:'tube',lanternGlow:'rgba(190,240,200,',paper:'#d8e4e8',broth:'#d8a640',potLabel:'FRYTKI',cs:'doner',chefShirt:'#f2f0ea',cookShirt:'#f2f0ea',elder:.08,small:true,
   pal:['#2a2a30','#3a4a5a','#5a5a62','#6a3a3a','#2e4a3a','#8a8a90','#4a3a5a','#1e2a3a'],
   tables:[[200,440,96,66],[420,452,96,66],[200,628,96,66],[430,640,96,66],[640,520,96,66]]},
  {id:'polska',name:'KARCZMA POD DĘBEM',sub:'Kuchnia polska: pierogi, żurek, schabowy.',sign:'KARCZMA',signCol:'#f4d080',floor:['#8a5e3a','#7e5434','#946640','#4a3020'],wall:['#e8dcc0','#c9b894','#9a8a68'],slat:'#7a4a2a',slat2:'#7a4a2a',trim:'#c43a2a',
@@ -531,8 +531,40 @@ function drawPride(){
  for(let i=0;i<pts.length-1;i++){const [x,z]=pts[i],[x2,z2]=pts[i+1],a=project(x+2,92,z),b=project(x2-2,92,z2),c=project((x+x2)/2,92,(z+z2)/2-14);poly([a,b,c],RAINBOW[i%6],.95);}
  for(const [fx0,fy] of [[1150,820],[150,820]]){const b0=project(fx0,fy,0),t0=project(fx0,fy,150);g.strokeStyle='#8a7a6a';g.lineWidth=2.5*zoom;g.beginPath();g.moveTo(b0.x,b0.y);g.lineTo(t0.x,t0.y);g.stroke();
   const wv=Math.sin(sim*3+fx0)*3;for(let i=0;i<6;i++){const zt=146-i*7,a=project(fx0,fy,zt),b=project(fx0+46,fy,zt+wv),c=project(fx0+46,fy,zt-7+wv),d=project(fx0,fy,zt-7);poly([a,b,c,d],RAINBOW[i],.97);}}}
+function srand(seed){let s=seed>>>0||1;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+function drawKebabGrime(){const R=srand(1337);
+ // odrapane kafelki do połowy ściany, część brakuje, fugi w syfie
+ for(let x=104;x<1196;x+=22)for(let z=8;z<64;z+=16){const r=R();if(r<.09){wallRect(x+1,x+21,z+1,z+15,'#4a4030');continue;}wallRect(x+1,x+21,z+1,z+15,r<.3?'#cfc8b0':r<.6?'#d8d2bc':'#c4bc9e',.9);if(r>.93)pathStroke([project(x+3,86,z+13),project(x+12,86,z+6),project(x+19,86,z+9)],'#3a3328',1*zoom);}
+ wallRect(102,1198,62,66,'#6e6248');
+ // tłuste zacieki i plamy
+ for(let i=0;i<26;i++){const x=110+R()*1070,z=70+R()*100,w=10+R()*46,h=8+R()*30;wallRect(x,x+w,z,z+h,R()<.5?'#3e3220':'#5a4a2a',.16+R()*.18);}
+ for(let i=0;i<18;i++){const x=110+R()*1070,z0=110+R()*70,l=20+R()*60;wallRect(x,x+2+R()*3,z0-l,z0,'#3a2e1a',.25+R()*.2);}
+ // odpadający tynk z cegłą pod spodem
+ for(const [x0,z0,w,h] of [[250,96,58,40],[620,148,44,26],[1010,78,70,46],[148,140,36,24]]){wallRect(x0-3,x0+w+3,z0-3,z0+h+3,'#e0d6b8',.9);wallRect(x0,x0+w,z0,z0+h,'#7a3e2c');
+  for(let z=z0+2;z<z0+h;z+=8)for(let x=x0+((z/8|0)%2)*7;x<x0+w-2;x+=14)wallRect(x,Math.min(x+12,x0+w),z,Math.min(z+6,z0+h),'#9a5238');}
+ // pęknięcia
+ for(const pts of [[[400,180],[388,160],[396,140],[384,118]],[[720,182],[730,165],[722,150],[735,128],[728,110]],[[930,90],[948,104],[944,120]]])pathStroke(pts.map(([x,z])=>project(x,86,z)),'#2e2618',1.4*zoom);
+ // grzyb w rogach i przy podłodze
+ for(const [x0,x1] of [[102,190],[1110,1198]]){wallRect(x0,x1,0,170,'#2a3a22',.22);wallRect(x0+10,x1-10,120,180,'#1e2a18',.2);}
+ wallRect(102,1198,0,10,'#2a2a1a',.45);
+ // rura pod sufitem z rdzą i kapiącą wodą
+ boxZ(104,74,1090,8,168,176,'#6a6a64','#4e4e48','#3a3a36');for(const x of [300,560,880,1120])boxZ(x,72,10,12,166,178,'#8a5a32','#6a4224','#4e301a');
+ const dx=560,dz=168-((sim*60)%150);if(dz>20){const q=project(dx+5,90,dz);circ(q.x,q.y,1.6,'#9ad0e8',.8);}
+ // graffiti i naklejki
+ const tag=(t,x,z,col,sz)=>{const q=project(x,86,z);g.save();g.translate(q.x,q.y);g.rotate(-.12);text(t,0,0,sz*zoom,col,900);g.restore();};
+ tag('JP',640,100,'rgba(40,40,40,.55)',22);tag('ŁKS',1040,150,'rgba(170,30,40,.5)',14);tag('KASA 0',190,92,'rgba(30,60,150,.45)',10);tag('♥ ŻANETA',980,110,'rgba(180,40,120,.45)',9);
+ wallRect(600,646,104,128,'#f0ece0');const nq=project(623,86,119);text('NIE PALIĆ',nq.x,nq.y,7*zoom,'#c02020',900);pathStroke([project(600,86,104),project(646,86,128)],'#c02020',1.5*zoom);wallRect(630,646,104,112,'#4a4030');
+ // przekrzywiona kartka "TOALETA NIECZYNNA"
+ const pq=project(1080,86,130);g.save();g.translate(pq.x,pq.y);g.rotate(.18);g.fillStyle='#f4f0d8';g.fillRect(-26*zoom,-10*zoom,52*zoom,20*zoom);text('WC NIECZYNNE',0,1*zoom,6*zoom,'#222',900);g.restore();
+ // goła żarówka na kablu
+ const bq=project(470,110,200),bb=project(470,110,150);g.strokeStyle='#1a1a1a';g.lineWidth=1.2*zoom;g.beginPath();g.moveTo(bq.x,bq.y);g.lineTo(bb.x,bb.y);g.stroke();const fl=Math.random()<.04?.3:1;circ(bb.x,bb.y+3*zoom,4,`rgba(255,240,190,${.95*fl})`);glow(470,110,90,'rgba(255,230,160,@)',.16*fl);
+ // lewa ściana: zacieki pod sufitem, grzyb przy podłodze
+ const sideRect=(y0,y1,z0,z1,col,a)=>poly([project(102,y0,z1),project(102,y1,z1),project(102,y1,z0),project(102,y0,z0)],col,a);
+ sideRect(90,840,0,30,'#1e2a16',.35);for(let i=0;i<14;i++){const y=100+R()*720,h=6+R()*20;sideRect(y,y+12+R()*40,122,122+h,'#3e3220',.22+R()*.2);sideRect(y+4,y+6,100,124,'#3a2e1a',.25);}
+ // karaluchy
+ for(let i=0;i<4;i++){const u=(sim*(.05+i*.013)+i*.27)%1,x=110+u*1060,z=8+Math.sin(u*40+i)*6+i*30;if(Math.sin(sim*1.3+i*2)>.2){const q=project(x,85,z);g.fillStyle='#2a1a10';g.fillRect(q.x-2*zoom,q.y-1*zoom,4*zoom,2*zoom);}}}
 function drawThemeDecor(){const id=TH.id;if(id==='wege')drawPride();
- if(id==='kebab'){wallRect(370,560,98,140,'#f4f0e0');for(let i=0;i<3;i++){wallRect(380+i*62,428+i*62,104,132,['#c86a35','#d8a640','#7aa04a'][i]);}wallRect(370,560,140,144,'#d8402a');
+ if(id==='kebab'){drawKebabGrime();wallRect(370,560,98,140,'#e4dcc4');for(let i=0;i<3;i++){wallRect(380+i*62,428+i*62,104,132,['#c86a35','#d8a640','#7aa04a'][i]);}wallRect(370,560,140,144,'#d8402a');
   wallRect(700,760,40,110,'#e8c040');wallRect(706,754,48,70,'#d8402a');wallRect(780,830,60,120,'#3a8ad0',.8);}
  else if(id==='polska'){for(const bx of [150,420,690,960])wallRect(bx,bx+16,13,182,'#5a3a22');
   const a=project(560,86,150);g.strokeStyle='#8a6a4a';g.lineWidth=3*zoom;for(const sd of [-1,1]){g.beginPath();g.moveTo(a.x,a.y);g.lineTo(a.x+sd*30*zoom,a.y-22*zoom);g.lineTo(a.x+sd*44*zoom,a.y-40*zoom);g.moveTo(a.x+sd*30*zoom,a.y-22*zoom);g.lineTo(a.x+sd*40*zoom,a.y-14*zoom);g.moveTo(a.x+sd*20*zoom,a.y-14*zoom);g.lineTo(a.x+sd*22*zoom,a.y-30*zoom);g.stroke();}
@@ -541,6 +573,27 @@ function drawThemeDecor(){const id=TH.id;if(id==='wege')drawPride();
   for(const wx of [470,660,1000]){const c=project(wx,86,150);for(const [r,col] of [[10,'#2a5ab0'],[7,'#ffffff'],[4,'#6ab0f0'],[2,'#111']]){g.fillStyle=col;g.beginPath();g.arc(c.x,c.y,r*zoom,0,TAU);g.fill();}}}
  else if(id==='wege'){for(let wx=130;wx<1180;wx+=120){const c=project(wx,86,170);g.fillStyle='#e8dcc0';g.fillRect(c.x-7*zoom,c.y,14*zoom,8*zoom);for(let i=0;i<5;i++){g.strokeStyle=i%2?'#4a8a4a':'#6aaa5a';g.lineWidth=3*zoom;g.beginPath();g.moveTo(c.x,c.y+4*zoom);g.quadraticCurveTo(c.x+(i-2)*8*zoom,c.y+16*zoom,c.x+(i-2)*6*zoom,c.y+(30+i*5)*zoom);g.stroke();}}
   wallRect(690,800,50,120,'#1e2a22');const t=project(745,86,100);text('OAT LATTE',t.x,t.y,9*zoom,'#f0f0e8',700);const t2=project(745,86,80);text('KOMBUCHA',t2.x,t2.y,9*zoom,'#f0f0e8',700);}}
+let smallFires=[],hazeT=0;
+function shishaFire(x,y){smallFires.push({x,y,t:0,life:rnd(7,10),seed:rnd(0,9)});fx('fire');for(let i=0;i<12;i++)particles.push({x,y,z:8,vx:rnd(-60,60),vy:rnd(-40,40),vz:rnd(40,140),radius:rnd(1.5,3),life:rnd(.3,.7),col:pick(['#ff7a2a','#ffd060','#ff4a2a'])});addScore(160,x,y,'ŻAR Z SHISHY!');if(phase==='play'&&!alarm)startPanic(x,y);}
+function updateSmallFires(dt){for(const f of smallFires){f.t+=dt;if(f.t>f.life)continue;for(const q of [player,...npcs])if(!(q.burn>0)&&!q.carried&&q.status!=='escaped'&&q.status!=='pot'&&q.status!=='street'&&Math.hypot(q.x-f.x,q.y-f.y)<18&&Math.random()<dt*3)ignite(q);if(Math.random()<dt*4)particles.push({x:f.x+rnd(-5,5),y:f.y,z:14,vx:rnd(-6,6),vy:rnd(-4,4),vz:rnd(30,60),radius:rnd(2,4),life:rnd(.6,1.1),col:'rgba(90,85,80,.5)'});}smallFires=smallFires.filter(f=>f.t<f.life);}
+function drawSmallFires(){for(const f of smallFires){const k=Math.min(1,f.t*3)*Math.min(1,(f.life-f.t)/1.5),t=sim*14+f.seed;glow(f.x,f.y,46*k,'rgba(255,130,50,@)',.2*k);const p=project(f.x,f.y,2);
+ for(let j=0;j<4;j++){const ax=p.x+(j-1.5)*4*zoom+Math.sin(t+j)*1.5*zoom,h=(12+Math.sin(t*1.3+j*2)*5+(j%2)*4)*zoom*k;poly([{x:ax-3.5*zoom,y:p.y},{x:ax+Math.sin(t*.8+j)*3*zoom,y:p.y-h},{x:ax+3.5*zoom,y:p.y}],j%2?'#ffb040':'#ff6a2a',.9);}
+ const q=project(f.x,f.y,1);g.fillStyle='rgba(30,20,15,.5)';g.beginPath();g.ellipse(q.x,q.y+1,10*zoom,4*zoom,0,0,TAU);g.fill();}}
+function drawShishaT(o){const {x,y,w,d,h}=o,cx=x+w/2,cy=y+d/2,s=zoom*1.05,b=project(cx,cy,h),t2=project(cx,cy,h+44);
+ g.fillStyle='rgba(20,12,8,.35)';g.beginPath();g.ellipse(b.x+2*s,b.y+2*s,9*s,4*s,0,0,TAU);g.fill();
+ g.fillStyle='rgba(70,150,200,.8)';g.beginPath();g.ellipse(b.x,b.y-8*s,9*s,10*s,0,0,TAU);g.fill();g.strokeStyle='#1e3a52';g.lineWidth=1*s;g.stroke();g.fillStyle='rgba(255,255,255,.4)';g.fillRect(b.x-5*s,b.y-14*s,2*s,6*s);
+ g.strokeStyle='#d8a040';g.lineWidth=3*s;g.beginPath();g.moveTo(b.x,b.y-17*s);g.lineTo(t2.x,t2.y);g.stroke();g.fillStyle='#d8a040';g.fillRect(t2.x-7*s,t2.y+10*s,14*s,2*s);
+ g.fillStyle='#8a4a2a';g.fillRect(t2.x-5*s,t2.y-3*s,10*s,5*s);g.fillStyle=`rgba(255,${(110+Math.sin(sim*5+x)*50)|0},40,.95)`;g.fillRect(t2.x-4*s,t2.y-5*s,8*s,2*s);
+ g.strokeStyle='#5a2a5a';g.lineWidth=2*s;g.beginPath();g.moveTo(b.x+4*s,b.y-20*s);g.bezierCurveTo(b.x+26*s,b.y-10*s,b.x+20*s,b.y+8*s,b.x+30*s,b.y+4*s);g.stroke();
+ for(let i=0;i<3;i++){const u=(sim*.35+i/3+x*.01)%1;g.fillStyle=`rgba(235,235,245,${(1-u)*.3})`;g.beginPath();g.arc(t2.x+Math.sin(sim+i)*6*s*u,t2.y-u*34*s,(2.5+u*7)*s,0,TAU);g.fill();}}
+function drawHaze(){if(TH.id!=='turecka')return;const src=objects.filter(o=>o.type==='shishaT'&&!o.dead);
+ for(const o of src){const cx=o.x+o.w/2,cy=o.y+o.d/2;for(let i=0;i<6;i++){const ph=sim*.12+i*1.7+cx*.013,px=cx+Math.sin(ph)*38+Math.cos(ph*.7+i)*20,py=cy+Math.cos(ph*.9)*26,z=70+((sim*7+i*23)%70),p=project(px,py,z),r=(32+14*Math.sin(ph*1.3))*zoom;
+  const gr=g.createRadialGradient(p.x,p.y,0,p.x,p.y,r);gr.addColorStop(0,'rgba(225,222,235,.3)');gr.addColorStop(1,'rgba(225,222,235,0)');g.fillStyle=gr;g.fillRect(p.x-r,p.y-r,r*2,r*2);}
+  // wydmuch dymu przez siedzącego gościa
+  const sm=npcs.find(n=>n.status==='eat'&&!n.down&&Math.hypot(n.x-cx,n.y-cy)<90&&((sim*.5+n.x*.01)%1)<.28);
+  if(sm&&Math.random()<.25)particles.push({x:sm.x+rnd(-3,3),y:sm.y,z:66,vx:rnd(-14,14),vy:rnd(-10,10),vz:rnd(14,32),radius:rnd(4,8),life:rnd(1,1.8),col:'rgba(235,235,245,.32)'});}
+ // ogólne zadymienie pod sufitem
+ for(let i=0;i<5;i++){const px=200+((sim*9+i*230)%950),py=200+i*120,p=project(px,py,140),r=110*zoom;const gr=g.createRadialGradient(p.x,p.y,0,p.x,p.y,r);gr.addColorStop(0,'rgba(210,205,225,.13)');gr.addColorStop(1,'rgba(210,205,225,0)');g.fillStyle=gr;g.fillRect(p.x-r,p.y-r,r*2,r*2);}}
 function drawShisha(o){const {x,y,w,d}=o,b=project(x+w/2,y+d/2,0),t2=project(x+w/2,y+d/2,58),s=zoom;
  g.fillStyle='rgba(90,160,200,.75)';g.beginPath();g.ellipse(b.x,b.y-9*s,9*s,11*s,0,0,TAU);g.fill();g.strokeStyle='#c8a050';g.lineWidth=3*s;g.beginPath();g.moveTo(b.x,b.y-18*s);g.lineTo(t2.x,t2.y);g.stroke();
  g.fillStyle='#8a5a2a';g.fillRect(t2.x-5*s,t2.y-4*s,10*s,5*s);g.fillStyle=`rgba(255,${(120+Math.sin(sim*5+x)*40)|0},40,.9)`;g.fillRect(t2.x-3*s,t2.y-6*s,6*s,2*s);
@@ -590,7 +643,7 @@ function drawFloorStyle(){const st=TH.floorStyle,F=TH.floor;
  else if(st==='terrazzo'){const TS=64;for(let ty=0;ty*TS<floor.h;ty++)for(let tx=0;tx*TS<floor.w;tx++){const x=floor.x+tx*TS,y=floor.y+ty*TS,w=Math.min(TS,floor.x+floor.w-x),d=Math.min(TS,floor.y+floor.h-y);floorQuad(x,y,w,d,F[3]);floorQuad(x+1,y+1,w-2,d-2,F[2]);
   for(let k=0;k<5;k++){const h2=((tx*131+ty*71+k*37)%97)/97,h3=((tx*53+ty*29+k*61)%89)/89;floorQuad(x+4+h2*(w-10),y+4+h3*(d-10),3,3,['#c8a890','#9ab890','#e0b8a8','#8a8a80','#f0e0c0'][k]);}}}
  else if(st==='dirty'){const TS=40;for(let ty=0;ty*TS<floor.h;ty++)for(let tx=0;tx*TS<floor.w;tx++){const x=floor.x+tx*TS,y=floor.y+ty*TS,w=Math.min(TS,floor.x+floor.w-x),d=Math.min(TS,floor.y+floor.h-y),hs2=((tx*73856093)^(ty*19349663))>>>0;floorQuad(x,y,w,d,F[3]);floorQuad(x+1.5,y+1.5,w-3,d-3,hs2%3?F[0]:F[1]);
-  if(hs2%7===0){const q=project(x+w/2,y+d/2);g.fillStyle='rgba(60,50,30,.25)';g.beginPath();g.ellipse(q.x,q.y,12*zoom,6*zoom,0,0,TAU);g.fill();}if(hs2%13===0)pathStroke([project(x+4,y+6),project(x+w*.6,y+d*.5),project(x+w-5,y+d-6)],'#4a4a46',1*zoom);}}}
+  if(hs2%23===0){const q=project(x+w*.3,y+d*.6);g.fillStyle='#e8e4d8';g.fillRect(q.x-3*zoom,q.y-2*zoom,6*zoom,4*zoom);}if(hs2%31===1){const q=project(x+w*.7,y+d*.3);g.fillStyle=hs2%2?'#c42a2a':'#2a6ac4';g.fillRect(q.x-4*zoom,q.y-1.5*zoom,8*zoom,3*zoom);g.fillStyle='#d8d8d8';g.fillRect(q.x+3*zoom,q.y-1.5*zoom,1.5*zoom,3*zoom);}if(hs2%17===2){const q=project(x+w*.5,y+d*.5);g.fillStyle='#f0e8d0';g.fillRect(q.x,q.y,3*zoom,1*zoom);g.fillStyle='#c86a2a';g.fillRect(q.x+3*zoom,q.y,1*zoom,1*zoom);}if(hs2%19===3){const q=project(x+w/2,y+d/2);g.fillStyle='rgba(200,40,30,.35)';g.beginPath();g.ellipse(q.x,q.y,7*zoom,3*zoom,0,0,TAU);g.fill();}if(hs2%7===0){const q=project(x+w/2,y+d/2);g.fillStyle='rgba(60,50,30,.25)';g.beginPath();g.ellipse(q.x,q.y,12*zoom,6*zoom,0,0,TAU);g.fill();}if(hs2%13===0)pathStroke([project(x+4,y+6),project(x+w*.6,y+d*.5),project(x+w-5,y+d-6)],'#4a4a46',1*zoom);}}}
 function drawProp(o){const {x,y,w,d,h}=o,k=o.kind;
  if(k==='barrel'){box(x,y,w,d,h,'#8a5a32','#6a4224','#4e301a');for(const z of [12,h-12])boxZ(x-1,y-1,w+2,d+2,z,z+3,'#3a3a3a','#2a2a2a','#1e1e1e');}
  else if(k==='crate'){box(x,y,w,d,h,'#a8844a','#8a6a38','#6a5028');pathStroke([project(x,y+d,h),project(x+w,y+d,0)],'#5a4020',1.5*zoom);}
@@ -625,7 +678,7 @@ function dishArt(c,d,x,y,s,rot,t){c.save();c.translate(x,y);c.rotate(rot);c.scal
  else{c.restore();bowlArt(c,x,y,s,true,t);c.save();c.translate(x,y);}
  c.restore();}
 const SPLASH={ramen:['#d9692f','#ffd98a'],kebab:['#f4eedc','#d84a3a'],kofte:['#8a4a2a','#f4f0e0'],smoothie:['#7ab04a','#f0e08a']};
-function initWorld(){potDown=null;TH=THEMES[Math.min(level,THEMES.length)-1];heads=[];boils=[];clothes=[];streaks=[];critSlow=0;critFlash=0;reinforce=[];sideWins=[{y:258,hp:2,broken:false},{y:706,hp:2,broken:false}];street={alarm:0,bin:false,trash:[],lampFlick:false,dent:0};objects=[];npcs=[];shards=[];wrecks=[];particles=[];texts=[];projectiles=[];lamps=[];decor=[];queue=[];fires=[];chefFlight=null;windowBroken=false;leftWinHp=2;flyers=[];dispScore=0;glassWins=[{x0:114,x1:235,hp:2,broken:false},{x0:480,x1:602,hp:2,broken:false},{x0:1050,x1:1175,hp:2,broken:false}];windowShards=[];punchHitFX=[];chefFate='W restauracji';hitStop=0;flashLevel=0;
+function initWorld(){potDown=null;smallFires=[];TH=THEMES[Math.min(level,THEMES.length)-1];heads=[];boils=[];clothes=[];streaks=[];critSlow=0;critFlash=0;reinforce=[];sideWins=[{y:258,hp:2,broken:false},{y:706,hp:2,broken:false}];street={alarm:0,bin:false,trash:[],lampFlick:false,dent:0};objects=[];npcs=[];shards=[];wrecks=[];particles=[];texts=[];projectiles=[];lamps=[];decor=[];queue=[];fires=[];chefFlight=null;windowBroken=false;leftWinHp=2;flyers=[];dispScore=0;glassWins=[{x0:114,x1:235,hp:2,broken:false},{x0:480,x1:602,hp:2,broken:false},{x0:1050,x1:1175,hp:2,broken:false}];windowShards=[];punchHitFX=[];chefFate='W restauracji';hitStop=0;flashLevel=0;
  score=0;broken=0;combo=1;bestCombo=1;comboTimer=0;chaos=0;maxChaos=0;frenzy=0;police=60;alarm=false;shake=0;introPlate=false;plateThrown=false;chefAngry=false;firstImpact=false;ending=false;sim=0;introT=0;countT=0;
  player=person('player',705,640,{outfit:'coat',shirt:'#dfbb73',hair:'#302d31',skin:'#edb88b',shape:'slim',speed:180,r:19,dir:-PI/2,hp:100,maxHp:100,held:null,attack:0,invuln:0,scale:1.1});
  // Restauracja: główny blat, stoliki, otwarta kuchnia, mnóstwo drobiazgów.
@@ -654,7 +707,7 @@ function initWorld(){potDown=null;TH=THEMES[Math.min(level,THEMES.length)-1];hea
   }
   add('tea',x+w/2-8,y+d*.22,16,17,54,1,23,'ceramic',{portable:true,home:{x:x+w/2-8,y:y+d*.22},homeOrder:tOrd});
   if(TH.tableLamps){add('lamp',x+w/2-6,y+d/2-6,13,13,73,2,90,'metal',{home:{x:x+w/2-6,y:y+d/2-6},homeOrder:tOrd+.1});lamps.push({x:x+w/2,y:y+d/2,z:105,power:90});}
-  if(TH.shisha&&j%2===0)add('shisha',x+w+2,y-22,14,14,60,2,90,'glass');
+  if(TH.shisha&&j%3===0)add('shishaT',x+w*.62,y+d*.3,12,12,52,1,40,'glass',{home:{x:x+w*.62,y:y+d*.3},homeOrder:tOrd+.15});
  }
  for(let i=0;i<7;i++){add('plate',390+i*32,322,20,20,72,1,25,'ceramic',{portable:true});}
  for(let i=0;i<10;i++){const x=918+(i%5)*34,y=143+((i/5)|0)*34;add(i%3===0?'bowl':'tea',x,y,16,15,101,1,27,'ceramic',{portable:true});}
@@ -725,7 +778,7 @@ function debris(x,y,z,mat='wood',count=12,power=1,permanent=true){const cols=pal
 function dust(x,y,col='#f3d8a4',count=8){for(let i=0;i<count;i++)particles.push({x:x+rnd(-18,18),y:y+rnd(-20,20),z:rnd(2,28),vx:rnd(-32,32),vy:rnd(-22,22),vz:rnd(5,40),radius:rnd(3,8),life:rnd(.3,.85),max:1,col});}
 function impactWave(x,y){screenImpact(1);dust(x,y,'#f1e0bc',13);}
 function addScore(n,x,y,label,inj){const old=Math.floor(combo);combo=Math.min(12,combo+.43);comboTimer=3;bestCombo=Math.max(bestCombo,Math.floor(combo));const gain=Math.round(n*combo*(frenzy>0?1.4:1));score+=gain;if(inj){floating(`+${gain}`,x,y);texts.push({x:x+rnd(-8,8),y,z:84,life:1.45,text:label.replace(/!$/,'')+'!',inj:true,wob:rnd(-1,1),seed:Math.random()*99});}else floating(`+${gain} ${label}`,x,y);if(Math.floor(combo)>old&&Math.floor(combo)>=2)comboSplash(Math.floor(combo));if(phase==='play'){if(frenzy<=0){chaos=clamp(chaos+11+Math.min(20,n*.065)+combo*.8,0,100);maxChaos=Math.max(maxChaos,chaos);if(chaos>=100){frenzy=5.5;toast('⚡ SZAŁ! 5 SEKUND DODATKOWYCH PUNKTÓW!');comboSplash(Math.floor(combo));fx('bell');}}}}
-function smashObject(o,asThrown=false){if(!o||o.dead)return;o.dead=true;broken++;let x=o.x+o.w/2,y=o.y+o.d/2;
+function smashObject(o,asThrown=false){if(!o||o.dead)return;o.dead=true;broken++;let x=o.x+o.w/2,y=o.y+o.d/2;if(o.type==='shishaT')shishaFire(x,y+10);
  wrecks.push({x,y,w:o.w,d:o.d,type:o.type,mat:o.mat,seed:rnd(0,TAU),col:pick(pal[o.mat]||pal.wood)});
  debris(x,y,o.h,o.mat,o.type==='table'?36:o.type==='counter'?40:o.type==='chair'?20:13,asThrown?1.5:1.12,true);impactWave(x,y);screenImpact(o.type==='table'?4:o.type==='counter'?5:2);
  if(o.type==='bowl'||o.type==='plate'||o.type==='tea')dust(x,y,'#dd9c5a',8);
@@ -1056,7 +1109,7 @@ function drawFires(){for(const f of fires){const t=sim*13+f.x*.02;const rad=110+
  const height=(31+Math.sin(t+j*3)*13+j%3*7)*zoom;
  poly([{x:ax-9*zoom,y:ay},{x:ax-7*zoom,y:ay-height*.6},{x:ax+Math.sin(t*.7+j)*9*zoom,y:ay-height},{x:ax+10*zoom,y:ay-height*.5},{x:ax+9*zoom,y:ay}],j%3===0?'#ffec90':j%2===0?'#ffa34b':'#ea5a42',.82);
  }} }
-function update(dt){sim+=dt;if(phase==='levelup'){updateSmoothing(dt);updatePhysics(dt);return;}updateSmoothing(dt);updateFire(dt);musicTick();if(phase==='play'&&alarm&&sim>nextCrowdCry){crowdCry();nextCrowdCry=sim+rnd(.45,1.5)/(1+(SND.panic||0)/4);}if(phase==='intro'){updateIntro(dt);updatePeople(dt);updateChef(dt);updatePhysics(dt);return;}if(phase==='countdown'){updateCloth(dt);updateCountdown(dt);updatePeople(dt);updatePhysics(dt);return;}if(phase!=='play')return;police-=dt;if(police<=0){police=0;levelComplete();return;}waveCheck();updatePlayer(dt);updatePeople(dt);updateChef(dt);if(phase!=='play')return;updatePhysics(dt);updateHeads(dt);updateBurn(dt);updateBoils(dt);updateCloth(dt);comboTimer=Math.max(0,comboTimer-dt);if(comboTimer===0)combo=1;if(frenzy>0){frenzy=Math.max(0,frenzy-dt);chaos=frenzy>0?100:48;}else{chaos=Math.max(0,chaos-dt*5.9);}hud();updateHint();}
+function update(dt){sim+=dt;if(phase==='levelup'){updateSmoothing(dt);updatePhysics(dt);return;}updateSmoothing(dt);updateFire(dt);updateSmallFires(dt);musicTick();if(phase==='play'&&alarm&&sim>nextCrowdCry){crowdCry();nextCrowdCry=sim+rnd(.45,1.5)/(1+(SND.panic||0)/4);}if(phase==='intro'){updateIntro(dt);updatePeople(dt);updateChef(dt);updatePhysics(dt);return;}if(phase==='countdown'){updateCloth(dt);updateCountdown(dt);updatePeople(dt);updatePhysics(dt);return;}if(phase!=='play')return;police-=dt;if(police<=0){police=0;levelComplete();return;}waveCheck();updatePlayer(dt);updatePeople(dt);updateChef(dt);if(phase!=='play')return;updatePhysics(dt);updateHeads(dt);updateBurn(dt);updateBoils(dt);updateCloth(dt);comboTimer=Math.max(0,comboTimer-dt);if(comboTimer===0)combo=1;if(frenzy>0){frenzy=Math.max(0,frenzy-dt);chaos=frenzy>0?100:48;}else{chaos=Math.max(0,chaos-dt*5.9);}hud();updateHint();}
 function updateHint(){const p=player;if(p.held){
   $('tip').textContent=(p.held.kind&&p.held.kind!=='chef')?'I — RZUĆ GOŚCIA (okno = bonus!) · J — W RYJ':p.held.kind==='chef'?(dst(p,kitchenZone)<180?'I — WRZUĆ SZEFA DO GARA!':dst(p,windowZone)<118?'I — WYRZUĆ PRZEZ OKNO!':'ZANIEŚ KUCHARZA DO GARA LUB OKNA · I'):(p.held.type==='plate'&&dst(p,kitchenZone)<250?'I — RZUĆ TALERZ W KUCHNIĘ!':'I — RZUĆ PRZEDMIOT');$('tip').classList.add('show');return;}
   if(chef.status==='ko'&&dst(p,chef)<105){$('tip').textContent='I — PODNIEŚ POWALONEGO KUCHARZA';$('tip').classList.add('show');return;}
@@ -1335,6 +1388,7 @@ function drawObject(o){if(o.dead||o.carried)return;const {x,y,w,d,h}=o;if(!o.noS
  case 'prop':{drawProp(o);break;}
  case 'wallblock':{box(x,y,w,d,h,TH.wall[0],TH.wall[1],TH.wall[2]);break;}
  case 'shisha':{drawShisha(o);break;}
+ case 'shishaT':{drawShishaT(o);break;}
  case 'chair':{const B=o.back||'T';
  for(const [xx,yy] of [[x+2,y+2],[x+w-6,y+2],[x+2,y+d-6],[x+w-6,y+d-6]])box(xx,yy,4,4,17,shade(TH.ch[2],-.2),shade(TH.ch[2],-.32),shade(TH.ch[2],-.42));
  const bk=()=>{if(B==='T'){boxZ(x+1,y,w-2,4,17,46,TH.ch[0],TH.ch[1],TH.ch[2]);for(const t of [.33,.66])pathStroke([project(x+w*t,y+4,22),project(x+w*t,y+4,42)],TH.ch[2],1.4*zoom);}
@@ -1829,7 +1883,7 @@ function drawHeldObj(o){const att=player.attack>0?clamp(1-player.attack/.42,0,1)
  drawObject({...o,x:hx,y:hy,dead:false,carried:false,noShadow:true,home:null,homeOrder:undefined,flipped:false});g.restore();}
 const FLIPPABLE=['table','chair','bench','stool'];
 function flipObj(o){o.flipped=true;o.flipT=0;const cy=o.y+o.d/2,cx=o.x+o.w/2;o.flipDir=player.y<cy?1:-1;
- if(o.type==='table')for(const q of objects){if(!q.dead&&!q.carried&&['plate','bowl','tea','lamp'].includes(q.type)&&q.x>o.x-12&&q.x<o.x+o.w+12&&q.y>o.y-12&&q.y<o.y+o.d+12)smashObject(q,true);}
+ if(o.type==='table')for(const q of objects){if(!q.dead&&!q.carried&&['plate','bowl','tea','lamp','shishaT'].includes(q.type)&&q.x>o.x-12&&q.x<o.x+o.w+12&&q.y>o.y-12&&q.y<o.y+o.d+12)smashObject(q,true);}
  if(phase==='play'){panicNear(cx,cy,o.type==='table'?210:120);if(!alarm)startPanic(cx,cy);}
  fx('wood');setTimeout(()=>fx('soft'),120);screenImpact(o.type==='table'?3.2:1.4);dust(cx,cy,'#e6cfa4',o.type==='table'?18:8);impactWave(cx,cy);
  addScore(o.type==='table'?220:70,cx,cy,o.type==='table'?'STÓŁ W GÓRĘ!':'WYWROTKA!');broken++;}
@@ -2033,7 +2087,7 @@ function drawRoom(){drawFloor();drawWall();drawDioramaDetails();drawGlassWins();
  for(const f of flyers)list.push({order:f.y,fn:()=>drawFlyer(f)});for(const hd of heads)list.push({order:hd.y,fn:()=>drawHead(hd)});for(const cl of clothes)list.push({order:cl.z>0?cl.y:cl.y-40,fn:()=>drawCloth(cl)});for(const bo of boils)list.push({order:271,fn:()=>drawBoil(bo)});
  if(player.held&&!player.held.kind){const ho=player.held;list.push({order:player.y+.6,fn:()=>drawHeldObj(ho)});}
  if(player.held&&player.held.kind){const h=player.held;list.push({order:player.y+.5,fn:()=>drawActor({...h,x:player.x+Math.cos(player.dir)*5,y:player.y+.5,bob:38+Math.sin(sim*9)*1.2,carried:false,fallK:1,status:'carried',stride:0,stun:0,squash:0,flash:0,attack:0})});}
- list.sort((a,b)=>a.order-b.order);for(const item of list)item.fn();drawMood();drawWindowShards();drawChefFlight();drawKitchenSteam(true);drawFires();drawEffects();drawPunchImpacts();
+ list.sort((a,b)=>a.order-b.order);for(const item of list)item.fn();drawMood();drawWindowShards();drawChefFlight();drawKitchenSteam(true);drawFires();drawSmallFires();drawHaze();drawEffects();drawPunchImpacts();
  // hanging highlights and fine light bloom
 }
 function drawScene(){g.setTransform(DPR,0,0,DPR,0,0);g.clearRect(0,0,W,H);const naturalZoom=clamp(Math.min(W/1430,H/810)*1.05,.52,1.2);let want=naturalZoom;
