@@ -288,10 +288,12 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
       <label class="nameLabel" for="playerName">TWOJE IMIĘ / NICK</label>
       <input id="playerName" class="nameInput" maxlength="16" type="text" value="Gracz" placeholder="Wpisz nick" autocomplete="nickname" spellcheck="false" />
       <input id="playerName2" class="nameInput" maxlength="16" type="text" value="Gracz 2" placeholder="Nick gracza 2" autocomplete="off" spellcheck="false" style="display:none;margin-top:6px"/>
+      <p class="nameLabel">WYZWANIE DNIA</p>
+      <div class="dishGrid modeGrid dailyGrid"><label class="dish modeOn" id="dailyOpt"><input type="radio" name="mode" value="daily"/><span class="dishArt">📅</span><span class="dishText"><b>WYZWANIE DNIA</b><small id="dailyTxt"></small></span><span class="dishPrice">DZIŚ</span></label></div>
       <p class="nameLabel" id="modeLabel">TRYB GRY</p>
       <div class="dishGrid modeGrid" role="radiogroup" aria-labelledby="modeLabel">
         <label class="dish modeOn"><input type="radio" name="mode" value="1p" checked/><span class="dishArt">👤</span><span class="dishText"><b>1 GRACZ</b></span><span class="dishPrice">GRAJ</span></label>
-        <label class="dish modeOn" id="dailyOpt"><input type="radio" name="mode" value="daily"/><span class="dishArt">📅</span><span class="dishText"><b>WYZWANIE DNIA</b><small id="dailyTxt"></small></span><span class="dishPrice">DZIŚ</span></label>
+        
         <label class="dish modeOn" id="vsOpt"><input type="radio" name="mode" value="2p"/><span class="dishArt">👥</span><span class="dishText"><b>2 GRACZY</b><small>Awantura w kolejce · jedna klawiatura</small></span><span class="dishPrice">VS</span></label>
         <label class="dish modeOff" aria-disabled="true"><input type="radio" name="mode" value="online" disabled/><span class="dishArt">🌐</span><span class="dishText"><b>ONLINE</b></span><span class="dishPrice">WKRÓTCE</span></label>
       </div>
@@ -2542,8 +2544,8 @@ function drawNeonMenu(t){const c=cv,w=1040,h=360;if(coverCanvas.height!==360)cov
  c.strokeStyle='#2a2228';c.lineWidth=3;c.beginPath();c.moveTo(260,40);c.lineTo(260,0);c.moveTo(780,40);c.lineTo(780,0);c.stroke();
  c.font="700 168px Silkscreen,ui-monospace,monospace";c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';
  const draw=(txt,x,y,a)=>{c.shadowColor=`rgba(255,60,110,${a})`;c.shadowBlur=60;c.strokeStyle=a<1?'#6a2a40':'#ff4f7b';c.lineWidth=9;c.strokeText(txt,x,y);c.shadowBlur=24;c.strokeText(txt,x,y);c.shadowBlur=0;c.strokeStyle=a<1?'#a05a70':`rgba(255,224,234,${bz})`;c.lineWidth=3;c.strokeText(txt,x,y);};
- draw('HOT',w/2-245,168,fl);draw('POT',w/2+250,168,fl*fl2);
- c.font="700 34px Silkscreen,ui-monospace,monospace";c.shadowColor='rgba(255,170,60,1)';c.shadowBlur=22;c.fillStyle=fl2<1?'#a06a3a':'#ffc06a';c.fillText('• RESTAURACJA •',w/2,288);c.shadowBlur=0;
+ draw('HOT',w/2-245,188,fl);draw('POT',w/2+250,188,fl*fl2);
+ 
  // dym przesuwający się przed neonem
  for(let i=0;i<10;i++){const q=(t*.02+i/10)%1,x=-120+q*1280,y=110+Math.sin(i*2.3+t*.25)*80+(i%3)*30,r=90+((i*37)%70),g2=c.createRadialGradient(x,y,0,x,y,r);g2.addColorStop(0,`rgba(215,200,205,${.1*Math.sin(q*PI)})`);g2.addColorStop(1,'rgba(215,200,205,0)');c.fillStyle=g2;c.fillRect(x-r,y-r,2*r,2*r);}
  // iskry z neonu
